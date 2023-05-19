@@ -4,32 +4,11 @@
 
 %%% indicate_change/2 where it succeeds when the Change list contains the changes
 %%% between the numbers of the first list (contains up, down, no_c (no change))
-indicate_change([H,H|T], [no_c|Change]):-
-    indicate_change([H|T], Change).
+indicate_change([H], []).
 
-indicate_change([H1,H2|T], [up|Change]):-
-    H1 < H2,
-    indicate_change([H2|T], Change).
-
-indicate_change([H1,H2|T], [down|Change]):-
-    indicate_change([H2|T], Change).
-
-indicate_change([H,H], [no_c]).
-
-indicate_change([H1,H2], [up]):-
-    H1 < H2.
-
-indicate_change([H1,H2], [down]).
-
-
-
-%%% Exec 2
-
-%%% Alternative indicate_change %%%
-
-%%% Finds all the Changes when for every X with combinations of H1 and H2 that create the List
-indicate_change_alt(List, Changes) :-
-    findall(X, (append(_, [H1,H2|_], List), changes(H1, H2, X)), Changes).
+indicate_change([H1, H2|T], [Change|Changes]):-
+    changes(H1, H2, Change),
+    indicate_change([H2|T], Changes).
 
 %%% The changes between the numbers, if both numbers are equal returns no_c (no change)
 changes(Number, Number, no_c).
@@ -39,9 +18,16 @@ changes(Number1, Number2, up):-
     Number1 < Number2.
 
 %%% The changes between the numbers, if the second number is less, returns down
-changes(Number1X, Number2, down):-
+changes(Number1, Number2, down):-
     Number1 > Number2. 
 
+%%% Exec 2
+
+%%% Alternative indicate_change %%%
+
+%%% Finds all the Changes when for every X with combinations of H1 and H2 that create the List
+indicate_change_alt(List, Changes) :-
+    findall(X, (append(_, [H1,H2|_], List), changes(H1, H2, X)), Changes).
 
 %%%% Exec3
 
