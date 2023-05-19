@@ -1,3 +1,5 @@
+%%% EXEC1 CLP 2023
+
 %%% List Processing %%%
 
 %%% indicate_change/2 where it succeeds when the Change list contains the changes
@@ -21,12 +23,15 @@ indicate_change([H1,H2], [down]).
 
 
 
+%%% Exec 2
+
 %%% Alternative indicate_change %%%
 
 %%% TODO
 
 
 
+%%%% Exec3
 
 %%% Roling Average %%%
 
@@ -53,10 +58,54 @@ roll_avg(N, TimeSeq, [Ans]):-
     average_num(TimeSeq, Ans).
 
 
+
+%%% EXEC 4
+
+%%% Representations of graphs mentioned in the exercise. %%%
+
+example(1,[node(1,60,end), node(2,40,1), node(3,40,1), node(4,50,2)]). 
+example(2,[node(1,3,end), node(2,2,1), node(3,1,1), node(4,4,1), node(5,5,end)]).
+example(3,[node(1,100,end), node(2,100,1), node(3,100,2), node(4, 90, 1), node(5,80,2), node(6,100,3), node(7, 90, 1), node(8,100,3)]). 
+
+
+%%% (a) %%%
+
+graph_start_nodes(Graph, StartNodes):-
+    findall(X, (member(node(X,_ ,_ ), Graph), not(member(node(_,_,X), Graph))), StartNodes).
+
+
+%%% (b) %%%
+
+%%% Base case for evaluate_path/5, when the next node is the end node return the Value
+%%% and the current StartingNode
+evaluate_path(StartingNode, Visited, Graph, [Value], [StartingNode]):-
+    member(node(StartingNode, Value, end), Graph).
+
+%%% Base case for evaluate_path/5, when the next node is a part of the Visited nodes,
+%%% return the Value and the current StartingNode
+evaluate_path(StartingNode, Visited, Graph, [Value], [StartingNode]):-
+    member(EndNode, Visited),
+    member(node(StartingNode, Value, EndNode), Graph).
+
+%%% Traces the Graph for the Nodes and keeps the Values past, but cannot trace back to
+%%% the Visited nodes
+evaluate_path(StartingNode, Visited, Graph, [Value|Values], [StartingNode|NewSeq]):-
+    member(node(StartingNode, Value, EndNode), Graph),
+    not(member(EndNode, Visited)),
+    evaluate_path(EndNode, [EndNode|Visited], Graph, Values, NewSeq).
+
+
+%%% (c) %%%
+
+
+
+
+
+
 %%% Succeeds when L1 is a sublist of L2 (L2 contains L1)
 sublist(L1,L2):-
-    append( Ltemp, _S2, L2),
-    append( _S1, L1,Ltemp).
+    append(Ltemp, _S2, L2),
+    append(_S1, L1,Ltemp).
 
 
 %%% Finds the average of a List
