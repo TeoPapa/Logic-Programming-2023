@@ -27,8 +27,20 @@ indicate_change([H1,H2], [down]).
 
 %%% Alternative indicate_change %%%
 
-%%% TODO
+%%% Finds all the Changes when for every X with combinations of H1 and H2 that create the List
+indicate_change_alt(List, Changes) :-
+    findall(X, (append(_, [H1,H2|_], List), changes(H1, H2, X)), Changes).
 
+%%% The changes between the numbers, if both numbers are equal returns no_c (no change)
+changes(Number, Number, no_c).
+
+%%% The changes between the numbers, if the second number is greater, returns up
+changes(Number1, Number2, up):-
+    Number1 < Number2.
+
+%%% The changes between the numbers, if the second number is less, returns down
+changes(Number1X, Number2, down):-
+    Number1 > Number2. 
 
 
 %%%% Exec3
@@ -96,11 +108,19 @@ evaluate_path(StartingNode, Visited, Graph, [Value|Values], [StartingNode|NewSeq
 
 
 %%% (c) %%%
+max_seq(Graph, Seq, Value):-
+    graph_start_nodes(Graph, Seq),
+    evaluations(Seq, [], Graph, [], Value).
 
+evaluations([StartNode|T], Visited, Graph, MaxVals, Value):-
+    evaluate_path(StartingNode, Visited, Graph, Values, Sequence),
+    max(Values, Max),
+    evaluations(T, Sequence, Graph, [Max|MaxVals], Value).
 
-
-
-
+evaluations([StartNode], Visited, Graph, MaxVals, Value):-
+    evaluate_path(StartNode, Visited, Graph, Values, Seq),
+    max(Values, Max),
+    sum_list([Max|MaxVals], Value).
 
 %%% Succeeds when L1 is a sublist of L2 (L2 contains L1)
 sublist(L1,L2):-
